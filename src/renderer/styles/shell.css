@@ -1,0 +1,313 @@
+.app {
+  display: grid;
+  grid-template-columns: var(--sidebar-width) minmax(0, 1fr);
+  min-height: 100vh;
+}
+
+.app-loading {
+  display: grid;
+  grid-template-columns: 1fr;
+  place-items: center;
+  color: var(--text-muted);
+}
+
+/* ---------- Sidebar ---------- */
+
+.app-sidebar {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+  height: 100vh;
+  padding: var(--space-5) var(--space-3) var(--space-4);
+  background: var(--bg-elevated);
+  border-right: 1px solid var(--border);
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 var(--space-2);
+}
+
+.brand-logo {
+  position: relative;
+  width: 34px;
+  height: 34px;
+  flex: 0 0 34px;
+  overflow: hidden;
+  background: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.06), 0 4px 14px rgba(98, 116, 255, 0.28);
+  transition: transform 420ms var(--ease-spring), box-shadow 320ms var(--ease);
+}
+
+.brand:hover .brand-logo {
+  transform: rotate(-6deg) scale(1.06);
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.08), 0 8px 22px rgba(98, 116, 255, 0.4);
+}
+
+.brand-logo img {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 56px;
+  height: 56px;
+  max-width: none;
+  transform: translate(-50%, -50%);
+}
+
+.brand-copy {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.brand-copy h1 {
+  font-size: var(--text-lg);
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.brand-copy span {
+  overflow: hidden;
+  color: var(--text-subtle);
+  font-size: var(--text-xs);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.app-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.sidebar-label {
+  padding: 0 var(--space-3) var(--space-2);
+  color: var(--text-subtle);
+  font-size: var(--text-xs);
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+}
+
+.nav-item {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  min-height: 38px;
+  padding: 0 var(--space-3);
+  color: var(--text-muted);
+  border-radius: var(--radius-md);
+  font-size: var(--text-md);
+  font-weight: 600;
+  text-align: left;
+  transition: background-color var(--duration) var(--ease), color var(--duration) var(--ease);
+}
+
+.nav-item svg {
+  flex-shrink: 0;
+  color: var(--text-subtle);
+  transition: color var(--duration) var(--ease), transform 300ms var(--ease-spring);
+}
+
+.nav-item:hover svg {
+  transform: scale(1.1);
+}
+
+.nav-item:hover {
+  color: var(--text);
+  background: var(--surface-2);
+}
+
+.nav-item.active {
+  color: var(--text);
+  background: var(--accent-soft);
+}
+
+.nav-item.active svg {
+  color: var(--accent);
+}
+
+.nav-item.active::before {
+  content: "";
+  position: absolute;
+  top: 9px;
+  bottom: 9px;
+  left: -12px;
+  width: 3px;
+  background: var(--accent);
+  border-radius: 0 3px 3px 0;
+}
+
+.nav-label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.sidebar-footer {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-top: auto;
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--border);
+}
+
+.sidebar-switch {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 36px;
+  padding: 0 var(--space-3) 0 var(--space-2);
+  color: var(--text-muted);
+  border-radius: var(--radius-md);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  text-align: left;
+}
+
+.sidebar-switch:hover {
+  color: var(--text);
+  background: var(--surface-2);
+}
+
+.sidebar-switch-icon {
+  display: grid;
+  flex-shrink: 0;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  color: var(--text-muted);
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 7px;
+}
+
+.sidebar-switch-icon svg {
+  transition: transform 420ms var(--ease-spring);
+}
+
+.sidebar-switch:hover .sidebar-switch-icon svg {
+  transform: rotate(-18deg) scale(1.08);
+}
+
+.language-badge {
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+}
+
+.sidebar-switch-label {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.switch-track {
+  position: relative;
+  flex-shrink: 0;
+  width: 30px;
+  height: 18px;
+  background: var(--surface-3);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-pill);
+  transition: background-color var(--duration) var(--ease), border-color var(--duration) var(--ease);
+}
+
+.switch-track > span {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 12px;
+  height: 12px;
+  background: var(--text-muted);
+  border-radius: 50%;
+  transition: transform 300ms var(--ease-spring), background-color var(--duration) var(--ease);
+}
+
+.sidebar-switch[aria-checked="true"] .switch-track {
+  background: var(--accent-strong);
+  border-color: var(--accent-strong);
+}
+
+.sidebar-switch[aria-checked="true"] .switch-track > span {
+  background: #ffffff;
+  transform: translateX(12px);
+}
+
+/* ---------- Content area ---------- */
+
+.app-shell {
+  min-width: 0;
+}
+
+.app-view {
+  width: 100%;
+  max-width: 1480px;
+  margin: 0 auto;
+  padding: var(--space-6) var(--space-8) 56px;
+}
+
+.app-page-mount {
+  min-width: 0;
+}
+
+/* Collapse the sidebar to an icon rail in narrow windows. */
+@media (max-width: 1040px) {
+  .app {
+    grid-template-columns: var(--sidebar-rail-width) minmax(0, 1fr);
+  }
+
+  .app-sidebar {
+    align-items: center;
+    padding-inline: var(--space-2);
+  }
+
+  .brand {
+    padding: 0;
+  }
+
+  .brand-copy,
+  .sidebar-label,
+  .nav-label,
+  .sidebar-switch-label,
+  .switch-track {
+    display: none;
+  }
+
+  .nav-item,
+  .sidebar-switch {
+    justify-content: center;
+    width: 44px;
+    padding: 0;
+  }
+
+  .nav-item.active::before {
+    left: -8px;
+  }
+
+  .sidebar-switch[aria-checked="true"] .sidebar-switch-icon {
+    color: var(--accent);
+    background: var(--accent-soft);
+    border-color: transparent;
+  }
+
+  .app-view {
+    padding: var(--space-5) var(--space-5) 48px;
+  }
+}
+
+@media (max-width: 640px) {
+  .app-view {
+    padding: var(--space-4) var(--space-4) 40px;
+  }
+}

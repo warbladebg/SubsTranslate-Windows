@@ -1,0 +1,245 @@
+/*
+ * Cross-cutting motion: entrance choreography, sliding indicators, view transitions,
+ * skeletons and image fades. Component-specific motion lives with each component's
+ * styles; keyframes and easing tokens live in base.css and tokens.css. All of it is
+ * decorative: the reduced-motion rule in base.css collapses every duration, and App
+ * skips view transitions when reduced motion is requested.
+ */
+
+/* ---------- Page entrance: sections rise in one after another ---------- */
+
+.page > :not(.modal-backdrop),
+.discover-page > *,
+.column > *,
+.downloaded-title-grid > *,
+.catalog-grid > .catalog-card,
+.source-list > .source-card {
+  animation: enter-up var(--duration-enter) var(--ease-out) backwards;
+  animation-delay: calc(var(--stagger, 0) * var(--stagger-step));
+}
+
+:is(.page, .discover-page) > :nth-child(1) { --stagger: 0; }
+:is(.page, .discover-page) > :nth-child(2) { --stagger: 1; }
+:is(.page, .discover-page) > :nth-child(3) { --stagger: 2; }
+:is(.page, .discover-page) > :nth-child(4) { --stagger: 3; }
+:is(.page, .discover-page) > :nth-child(n + 5) { --stagger: 4; }
+
+/* Columns start after the header, so their children continue the sequence. */
+.column > :nth-child(1) { --stagger: 2; }
+.column > :nth-child(2) { --stagger: 3; }
+.column > :nth-child(3) { --stagger: 4; }
+.column > :nth-child(4) { --stagger: 5; }
+.column > :nth-child(n + 5) { --stagger: 6; }
+
+/* Cards cascade quickly; anything past the first screenful appears together. */
+:is(.catalog-grid, .downloaded-title-grid, .source-list) > :nth-child(1) { --stagger: 1; }
+:is(.catalog-grid, .downloaded-title-grid, .source-list) > :nth-child(2) { --stagger: 2; }
+:is(.catalog-grid, .downloaded-title-grid, .source-list) > :nth-child(3) { --stagger: 3; }
+:is(.catalog-grid, .downloaded-title-grid, .source-list) > :nth-child(4) { --stagger: 4; }
+:is(.catalog-grid, .downloaded-title-grid, .source-list) > :nth-child(5) { --stagger: 5; }
+:is(.catalog-grid, .downloaded-title-grid, .source-list) > :nth-child(6) { --stagger: 6; }
+:is(.catalog-grid, .downloaded-title-grid, .source-list) > :nth-child(7) { --stagger: 7; }
+:is(.catalog-grid, .downloaded-title-grid, .source-list) > :nth-child(n + 8) { --stagger: 8; }
+
+.catalog-grid > .catalog-card,
+.downloaded-title-grid > * {
+  animation-name: enter-scale;
+  animation-duration: 520ms;
+}
+
+/* A column nested in an animated column moves with its parent. */
+.column .column > * {
+  animation: none;
+}
+
+/* ---------- Sliding indicators (SlidingIndicator.tsx) ---------- */
+
+.has-sliding-indicator {
+  position: relative;
+  isolation: isolate;
+}
+
+.sliding-indicator {
+  position: absolute;
+  z-index: -1;
+  top: 0;
+  left: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.sliding-indicator.ready {
+  transition: transform 340ms var(--ease-out), width 340ms var(--ease-out), height 340ms var(--ease-out),
+    opacity 160ms ease, background-color var(--duration) var(--ease);
+}
+
+.sliding-indicator.pill {
+  background: var(--segment-active);
+  border-radius: 7px;
+  box-shadow: var(--shadow-sm);
+}
+
+.has-sliding-indicator > button.active,
+.has-sliding-indicator > button[aria-pressed="true"] {
+  background: transparent;
+  box-shadow: none;
+}
+
+.has-sliding-indicator:has(> button.active.danger) > .sliding-indicator.pill {
+  background: var(--danger-soft);
+  box-shadow: none;
+}
+
+.sliding-indicator.underline::after {
+  content: "";
+  position: absolute;
+  right: 6px;
+  bottom: 0;
+  left: 6px;
+  height: 2px;
+  background: var(--accent);
+  border-radius: 2px 2px 0 0;
+}
+
+.discover-view-tabs.has-sliding-indicator button.active {
+  border-bottom-color: transparent;
+}
+
+.sliding-indicator.nav {
+  background: var(--accent-soft);
+  border-radius: var(--radius-md);
+}
+
+.sliding-indicator.nav::before {
+  content: "";
+  position: absolute;
+  top: 9px;
+  bottom: 9px;
+  left: -12px;
+  width: 3px;
+  background: var(--accent);
+  border-radius: 0 3px 3px 0;
+}
+
+.app-nav.has-sliding-indicator .nav-item.active {
+  background: transparent;
+}
+
+.app-nav.has-sliding-indicator .nav-item.active::before {
+  display: none;
+}
+
+@media (max-width: 1040px) {
+  .sliding-indicator.nav::before {
+    left: -8px;
+  }
+}
+
+/* ---------- View transitions (theme reveal, language cross-fade) ---------- */
+
+@keyframes theme-reveal {
+  from {
+    clip-path: circle(0 at var(--reveal-x, 0) var(--reveal-y, 100%));
+  }
+  to {
+    clip-path: circle(150vmax at var(--reveal-x, 0) var(--reveal-y, 100%));
+  }
+}
+
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 240ms;
+  animation-timing-function: var(--ease);
+}
+
+:root[data-transition="theme"]::view-transition-old(root) {
+  animation: none;
+}
+
+:root[data-transition="theme"]::view-transition-new(root) {
+  animation: theme-reveal 620ms var(--ease-out);
+  mix-blend-mode: normal;
+}
+
+/* ---------- Images and loading skeletons ---------- */
+
+img.catalog-poster,
+img.downloaded-poster {
+  transition: opacity 360ms var(--ease), transform 600ms var(--ease-out);
+}
+
+/* The frame lifts on hover (see discover.css / downloaded.css); the artwork zooms inside it. */
+.catalog-card-main:hover img.catalog-poster,
+.downloaded-title-card:hover img.downloaded-poster {
+  transform: scale(1.05);
+}
+
+img.catalog-poster[data-loaded="false"],
+img.downloaded-poster[data-loaded="false"] {
+  opacity: 0;
+}
+
+.skeleton {
+  display: block;
+  background: linear-gradient(90deg, var(--surface-2) 30%, var(--surface-3) 50%, var(--surface-2) 70%);
+  background-size: 200% 100%;
+  border-radius: var(--radius-md);
+  animation: shimmer 1.5s linear infinite;
+}
+
+.catalog-skeleton-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+}
+
+.catalog-skeleton {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.catalog-skeleton .heading {
+  width: 220px;
+  height: 18px;
+}
+
+.catalog-skeleton .subheading {
+  width: 340px;
+  max-width: 80%;
+  height: 11px;
+}
+
+.catalog-skeleton-row {
+  display: flex;
+  gap: var(--space-3);
+  overflow: hidden;
+}
+
+.catalog-skeleton-card {
+  display: flex;
+  flex: 0 0 158px;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.catalog-skeleton-card .poster {
+  aspect-ratio: 2 / 3;
+  border-radius: var(--radius-lg);
+}
+
+.catalog-skeleton-card .line {
+  height: 10px;
+}
+
+.catalog-skeleton-card .line.short {
+  width: 60%;
+}
+
+/* Offset each card's shimmer so it reads as one wave across the row. */
+.catalog-skeleton-card:nth-child(2) .skeleton { animation-delay: 80ms; }
+.catalog-skeleton-card:nth-child(3) .skeleton { animation-delay: 160ms; }
+.catalog-skeleton-card:nth-child(4) .skeleton { animation-delay: 240ms; }
+.catalog-skeleton-card:nth-child(5) .skeleton { animation-delay: 320ms; }
+.catalog-skeleton-card:nth-child(6) .skeleton { animation-delay: 400ms; }
+.catalog-skeleton-card:nth-child(7) .skeleton { animation-delay: 480ms; }

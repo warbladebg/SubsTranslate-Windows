@@ -1,0 +1,98 @@
+# Dependencies
+node_modules/
+sidecars/paddle-gpu/.venv/
+sidecars/paddle-gpu/models/
+sidecars/libtorrent/vendor/
+__pycache__/
+*.pyc
+
+# Build, test, and packaging output
+dist/
+dist-electron/
+coverage/
+.vite/
+.cache/
+out/
+release/
+artifacts/
+*.tsbuildinfo
+*.tgz
+
+# Runtime scratch data and local evaluation material
+work/
+translation-evaluation/
+tmp/
+temp/
+.substranslate/
+
+# Local investigation and change notes (may name personal files and paths)
+docs/martian-empty-subtitle-investigation.md
+docs/ui-track-selection-review.md
+
+# Local agent configuration and instructions
+.agents/
+AGENTS.md
+
+# Environment files and credentials
+.env
+.env.*
+!.env.example
+.npmrc
+*.local
+*.pem
+*.key
+*.p12
+*.pfx
+*.cer
+*.crt
+credentials*.json
+secrets*.json
+*-api-key.bin
+*-api-token.bin
+
+# Application state that may contain paths, history, or provider exchanges
+settings.json
+translation-cache.json
+translation-history.json
+translation-sessions.json
+discovery-state.json
+download-locations.json
+media-batch-session.json
+workflow-profiles.json
+model-exchanges/
+
+# Local media and subtitle work files
+*.mkv
+*.mp4
+*.avi
+*.mov
+*.webm
+*.sup
+*.srt
+*.ass
+*.ssa
+*.vtt
+
+# Logs and temporary files
+*.log
+*.tmp
+*.temp
+*.part
+*.pid
+*.db
+*.sqlite
+*.sqlite3
+*.bak
+*.swp
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Editors and operating systems
+.idea/
+.vscode/
+*.code-workspace
+.DS_Store
+Thumbs.db
+Desktop.ini

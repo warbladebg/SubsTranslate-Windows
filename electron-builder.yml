@@ -1,0 +1,46 @@
+# Windows installer: npm run dist:win writes release/SubsTranslate-Setup-<version>.exe
+appId: com.warbladebg.substranslate
+productName: SubsTranslate
+copyright: Copyright © 2026 warbladebg
+
+directories:
+  output: release
+
+# Plain files instead of an app.asar archive: FFmpeg/FFprobe run as executables, Tesseract
+# loads its worker script from disk, and the Python torrent worker reads its script and
+# binding by path. None of those can read from inside an archive.
+asar: false
+
+files:
+  - package.json
+  - dist/**/*
+  - dist-electron/**/*
+  - public/app-logo.png
+  - eng.traineddata
+  - sidecars/models/**/*
+  - sidecars/libtorrent/engine.py
+  # Present after npm run setup:torrent; needs Python 3.12 on the user's machine.
+  - sidecars/libtorrent/vendor/**/*
+  # Only the 64-bit Windows binaries are needed.
+  - "!**/node_modules/ffprobe-static/bin/{darwin,linux}/**"
+  - "!**/node_modules/ffprobe-static/bin/win32/ia32/**"
+  - "!**/node_modules/onnxruntime-node/bin/napi-v6/{darwin,linux}/**"
+  - "!**/node_modules/onnxruntime-node/bin/napi-v6/win32/arm64/**"
+
+win:
+  target:
+    - target: nsis
+      arch: [x64]
+  icon: public/app-logo.png
+
+nsis:
+  oneClick: false
+  # Installs for the current user, so no administrator prompt is needed.
+  perMachine: false
+  allowToChangeInstallationDirectory: true
+  createDesktopShortcut: true
+  createStartMenuShortcut: true
+  shortcutName: SubsTranslate
+  artifactName: SubsTranslate-Setup-${version}.${ext}
+  # Keep settings, API keys and history when the app is uninstalled or updated.
+  deleteAppDataOnUninstall: false
